@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    shadeos.props
+
+    ShadeOS araclarinin ORTAK derleme ayarlari. Her aracin .vcxproj'u bunu
+    icerir; boylece toolset, CRT bicimi ve derleyici bayraklari tek yerde
+    durur ve araclar arasinda kaymaz.
+
+    ARACA OZGU olan sey burada DEGILDIR: hedef adi, kaynak dosyalar,
+    kutuphaneler ve mimariye gore manifest secimi her projenin kendi
+    .vcxproj'unda kalir.
+
+    Kullanim (proje dosyasinda, Microsoft.Cpp.props'tan SONRA):
+
+        <ImportGroup Label="PropertySheets">
+          <Import Project="..\..\shared\shadeos.props" />
+        </ImportGroup>
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Ortak katmanin yeri; kaynak dosyalar ve #include yolu buradan. -->
+  <PropertyGroup>
+    <ShadeOSSharedDir Condition="'$(ShadeOSSharedDir)'==''">$(MSBuildThisFileDirectory)</ShadeOSSharedDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ConformanceMode>true</ConformanceMode>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <SDLCheck>true</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ShadeOSSharedDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- Kaynak dosyalar BOM'suz UTF-8. Bu bayrak olmadan MSVC onlari sistem
+           ANSI kod sayfasi sanar ve L"—" gibi diziler uc ayri karaktere
+           bolunur. /utf-8 hem kaynak hem yurutme kumesini UTF-8 yapar. -->
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ShadeOSSharedDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Mimariye gore manifest secimi; .rc icindeki #if bunlara bakar. -->
+  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+    <ResourceCompile>
+      <PreprocessorDefinitions>SHADEOS_ARCH_X86;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+    <ResourceCompile>
+      <PreprocessorDefinitions>SHADEOS_ARCH_AMD64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Platform)'=='ARM64'">
+    <ResourceCompile>
+      <PreprocessorDefinitions>SHADEOS_ARCH_ARM64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <!-- Statik CRT: yaninda hicbir yeniden dagitilabilir paket gerekmez. -->
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <Optimization>MinSpace</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+
+</Project>

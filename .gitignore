@@ -1,0 +1,34 @@
+# Derleme ciktisi
+bin/
+obj/
+*.exe
+*.pdb
+*.ipdb
+*.obj
+*.iobj
+*.res
+*.tlog
+*.ilk
+*.lastbuildstate
+*.recipe
+*.log
+
+# Visual Studio kullanici dosyalari
+.vs/
+*.user
+*.suo
+
+# Tersine muhendislik dokumleri.
+#
+# Bunlar Windows'un KENDI ikililerinin dumpbin ciktisidir (cleanmgr.exe,
+# winver.exe, sysdm.cpl ...). Depoya konmuyorlar: baskasinin kodundan
+# turetilmis 6 MB'lik ham dokum yayimlamanin bir faydasi yok ve hepsi tek
+# komutla yeniden uretilebiliyor -- nasil uretildikleri re/*.ps1 icinde yazili.
+#
+# ANALIZ notlari (dialogs.txt gibi bizim yazdiklarimiz) depoda kalir.
+**/re/*disasm*.txt
+**/re/**/disasm*.txt
+**/re/strings_rdata.txt
+
+# Gecici yakalamalar
+**/re/tema/pix/
