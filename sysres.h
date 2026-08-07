@@ -68,6 +68,16 @@ namespace SysRes
         Cagiran DestroyIcon ile birakmali. */
     HICON LoadIcon(UINT uId, int cx, int cy);
 
+    /*  Menuyu SISTEM modulunden yukler.
+
+        Sablon ve ikonla ayni gerekce: menu metinleri de o modulun MUI'sinde
+        durur, dolayisiyla her arayuz dilinde dogru gelir ve klonun icine
+        tek bir menu metni gomulmez.
+
+        Donen HMENU cagirana aittir; pencereye SetMenu ile verildiginde
+        pencere sahiplenir. Bulunamazsa NULL doner. */
+    HMENU LoadMenu(UINT uId);
+
     /*  ILETI TABLOSU (RT_MESSAGETABLE).
 
         Bazi programlarin DEGISKEN iceren metinleri STRINGTABLE'da degil ileti

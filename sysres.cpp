@@ -182,6 +182,23 @@ HICON LoadIcon(UINT uId, int cx, int cy)
 }
 
 
+HMENU LoadMenu(UINT uId)
+{
+    /*  LoadMenuW, AS_DATAFILE ile acilmis bir modulde de calisir: menu
+        kaynagi yalnizca veridir, kod calistirilmaz. */
+    if (g_hSystem != NULL)
+    {
+        HMENU hMenu = LoadMenuW(g_hSystem, MAKEINTRESOURCEW(uId));
+        if (hMenu != NULL)
+        {
+            return hMenu;
+        }
+    }
+
+    return LoadMenuW(GetModuleHandleW(NULL), MAKEINTRESOURCEW(uId));
+}
+
+
 int FormatMsg(UINT uId, const DWORD_PTR *pArgs, LPWSTR pszBuf, int cchBuf)
 {
     if (pszBuf == NULL || cchBuf <= 0)
