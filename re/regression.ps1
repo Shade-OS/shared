@@ -89,10 +89,21 @@ $araclar = @(
        arg='mmsys.cpl'; minG=250; minY=200
        atla='orijinal kabuk yolu yukseltilmis baglamda pencere acmiyor' }
 
-    # cleanmgr'ın orijinali sürücü seçimiyle açılır; yalnızca O kutu
-    # karşılaştırılır. Tarama ve temizleme çalıştırılmaz.
+    # cleanmgr: sürücü VERİLEREK açılır ve ANA pencere beklenir.
+    #
+    # Ölçüldü: argümansız açınca yakalanan pencere 506x222 oluyor ve bu
+    # sürücü seçimi değil, "Hesaplanıyor..." ilerleme kutusu. İki çalıştırma
+    # arasında 1882 piksel fark çıkıyordu; farkın kapsamı x=20..239,
+    # y=165..182 -- yani ilerleme çubuğu ve "Taranıyor:" satırı. Zamana bağlı
+    # bir ekranı karşılaştırmanın anlamı yok.
+    #
+    # minG/minY o kutuyu elemek için yükseltildi; ana pencere ~559x713.
+    #
+    # GÜVENLİK: tarama salt okumadır. Hiçbir düğmeye basılmaz, pencere
+    # WM_CLOSE ile kapatılır -- temizleme ÇALIŞTIRILMAZ.
     @{ ad='cleanmgr'; klasor='cleanmgr'; cikti='cleanmgr.exe'
-       orijinal=(Join-Path $sistem 'cleanmgr.exe'); arg=''; minG=300; minY=150 }
+       orijinal=(Join-Path $sistem 'cleanmgr.exe'); arg='/d C'
+       minG=520; minY=600 }
 )
 
 if ($Only.Count -gt 0) {
